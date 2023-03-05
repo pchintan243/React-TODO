@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import "./Todo.css"
+import "./Todo.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Todo = () => {
 
@@ -11,6 +13,9 @@ const Todo = () => {
         else {
             setItems([...items, inputData])
             setInputData('')
+            toast.success("Item Added", {
+                position: "top-center",
+            })
         }
     }
 
@@ -19,51 +24,60 @@ const Todo = () => {
             return ind !== id;
         });
         setItems(deleteItems)
+        toast.success("Item Removed", {
+            position: "top-center",
+        })
     }
 
     const removeAll = () => {
         setItems([]);
+        toast.success("All Items Removed", {
+            position: "top-center",
+        })
     }
 
     return (
-        <div className='main-div'>
-            <div className="child-div">
-                <figure>
-                    <figcaption>
-                        Add Your List Here📃
-                    </figcaption>
-                </figure>
+        <>
+            <div className='main-div'>
+                <div className="child-div">
+                    <figure>
+                        <figcaption>
+                            Add Your List Here📃
+                        </figcaption>
+                    </figure>
 
-                {/* Add Items */}
-                <div className="addItems">
-                    <input type="text" placeholder='✍️ Add Items...' value={inputData}
-                        onChange={(e) => setInputData(e.target.value)} />
+                    {/* Add Items */}
+                    <div className="addItems">
+                        <input type="text" placeholder='✍️ Add Items...' value={inputData}
+                            onChange={(e) => setInputData(e.target.value)} />
 
-                    <i className="fa fa-plus add-btn" title='Add Item' onClick={addItem}></i>
-                </div>
+                        <i className="fa fa-plus add-btn" title='Add Item' onClick={addItem}></i>
+                    </div>
 
-                {/* Show Items */}
-                <div className="showItems">
-                    {
-                        items.map((elem, ind) => {
-                            return (
-                                <div className="eachItem" key={ind}>
-                                    <h3>{elem}</h3>
-                                    <i className="far fa-trash-alt add-btn" title='Delete Item'
-                                        onClick={() => deleteItem(ind)}></i>
-                                </div>
-                            )
-                        })
-                    }
+                    {/* Show Items */}
+                    <div className="showItems">
+                        {
+                            items.map((elem, ind) => {
+                                return (
+                                    <div className="eachItem" key={ind}>
+                                        <h3>{elem}</h3>
+                                        <i className="far fa-trash-alt add-btn" title='Delete Item'
+                                            onClick={() => deleteItem(ind)}></i>
+                                    </div>
+                                )
+                            })
+                        }
 
-                </div>
+                    </div>
 
-                {/* CLear All Button */}
-                <div className="showItems">
-                    <button className="btn effect04" data-sm-link-text="Remove All" onClick={removeAll}><span>CHECK LIST</span></button>
+                    {/* CLear All Button */}
+                    <div className="showItems">
+                        <button className="btn effect04" data-sm-link-text="Remove All" onClick={removeAll}><span>CHECK LIST</span></button>
+                    </div>
                 </div>
             </div>
-        </div>
+            <ToastContainer style={{ fontSize: "1.5rem" }} />
+        </>
     )
 }
 
