@@ -20,37 +20,76 @@ const getLocalItems = () => {
 const Todo = () => {
 
     const [inputData, setInputData] = useState('');
-    const [items, setItems] = useState(getLocalItems())
+    const [items, setItems] = useState(getLocalItems());
+    const [toggleSubmit, setToggleSubmit] = useState(true);
+    const [isEditItem, setisEditItem] = useState(null)
 
     const addItem = () => {
-        if (!inputData) { }
+        if (!inputData) {
+            toast.warn("Please filled the data", {
+                position: "top-center",
+            })
+        }
+        else if (inputData && !toggleSubmit) {
+            // Update the data
+            setItems(
+                items.map((elem) => {
+                    if (elem.id === isEditItem) {
+                        return { ...elem, name: inputData }
+                    }
+                    return elem;
+                })
+            )
+            setToggleSubmit(true);
+            setInputData('');
+            setisEditItem(null)
+
+            // Get alert after note edited successfully
+            toast.success("Item Edited", {
+                position: "top-center",
+            })
+        }
         else {
+            const allInputData = { id: new Date().getTime().toString(), name: inputData }
             // Get all the items and after that add item on last index
-            setItems([...items, inputData])
+            setItems([...items, allInputData])
             setInputData('')
-            // Get alert after note added succesfully
+            // Get alert after note added successfully
             toast.success("Item Added", {
                 position: "top-center",
             })
         }
     }
 
-    const deleteItem = (id) => {
+    const deleteItem = (ind) => {
         // If id is matched with index it removes and after that new setItems will render
-        const deleteItems = items.filter((elem, ind) => {
-            return ind !== id;
+        const deleteItems = items.filter((elem) => {
+            return ind !== elem.id;
         });
         setItems(deleteItems)
-        // Get alert after note removed succesfully
+        // Get alert after note removed successfully
         toast.warn("Item Removed", {
             position: "top-center",
         })
     }
 
+    const editItem = (id) => {
+        let newEditItem = items.find((elem) => {
+            return elem.id === id;
+        });
+        console.log(newEditItem);
+
+        // For showing icon based on need
+        setToggleSubmit(false);
+        setInputData(newEditItem.name);
+        // Get the id of which we want to edit
+        setisEditItem(id)
+    }
+
     const removeAll = () => {
         // Pass the empty state
         setItems([]);
-        // Get alert after all notes removed succesfully
+        // Get alert after all notes removed successfully
         toast.error("All Items Removed", {
             position: "top-center",
         })
@@ -77,18 +116,25 @@ const Todo = () => {
                         <input type="text" placeholder='✍️ Add Items...' value={inputData}
                             onChange={(e) => setInputData(e.target.value)} />
 
-                        <i className="fa fa-plus add-btn" title='Add Item' onClick={addItem}></i>
+                        {
+                            toggleSubmit ? <i className="fa fa-plus add-btn" title='Add Item' onClick={addItem}></i> :
+                                <i className="fa fa-edit add-btn" title='Update Item' onClick={addItem}></i>
+                        }
                     </div>
 
                     {/* Show Items */}
                     <div className="showItems">
                         {
-                            items.map((elem, ind) => {
+                            items.map((elem) => {
                                 return (
-                                    <div className="eachItem" key={ind}>
-                                        <h3>{elem}</h3>
-                                        <i className="far fa-trash-alt add-btn" title='Delete Item'
-                                            onClick={() => deleteItem(ind)}></i>
+                                    <div className="eachItem" key={elem.id}>
+                                        <h3>{elem.name}</h3>
+                                        <div className="todo-btn">
+                                            <i className="far fa-edit add-btn" title='Edit Item'
+                                                onClick={() => editItem(elem.id)}></i>
+                                            <i className="far fa-trash-alt add-btn" title='Delete Item'
+                                                onClick={() => deleteItem(elem.id)}></i>
+                                        </div>
                                     </div>
                                 )
                             })
