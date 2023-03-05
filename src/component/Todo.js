@@ -12,8 +12,10 @@ const Todo = () => {
     const addItem = () => {
         if (!inputData) { }
         else {
+            // Get all the items and after that add item on last index
             setItems([...items, inputData])
             setInputData('')
+            // Get alert after note added succesfully
             toast.success("Item Added", {
                 position: "top-center",
             })
@@ -21,17 +23,21 @@ const Todo = () => {
     }
 
     const deleteItem = (id) => {
+        // If id is matched with index it removes and after that new setItems will render
         const deleteItems = items.filter((elem, ind) => {
             return ind !== id;
         });
         setItems(deleteItems)
+        // Get alert after note removed succesfully
         toast.warn("Item Removed", {
             position: "top-center",
         })
     }
 
     const removeAll = () => {
+        // Pass the empty state
         setItems([]);
+        // Get alert after all notes removed succesfully
         toast.error("All Items Removed", {
             position: "top-center",
         })
