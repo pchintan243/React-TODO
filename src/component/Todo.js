@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import "./Todo.css";
+import logo from "../images/todo.svg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,14 +25,14 @@ const Todo = () => {
             return ind !== id;
         });
         setItems(deleteItems)
-        toast.success("Item Removed", {
+        toast.warn("Item Removed", {
             position: "top-center",
         })
     }
 
     const removeAll = () => {
         setItems([]);
-        toast.success("All Items Removed", {
+        toast.error("All Items Removed", {
             position: "top-center",
         })
     }
@@ -41,6 +42,7 @@ const Todo = () => {
             <div className='main-div'>
                 <div className="child-div">
                     <figure>
+                    <img src={logo} alt="logo" />
                         <figcaption>
                             Add Your List Here📃
                         </figcaption>
