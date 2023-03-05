@@ -1,13 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import "./Todo.css";
 import logo from "../images/todo.svg"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// To get data in local storage
+
+const getLocalItems = () => {
+    let list = localStorage.getItem('lists');
+    console.log(list);
+    if (list) {
+        return JSON.parse(localStorage.getItem('lists'));
+    }
+    else {
+        return [];
+    }
+}
+
 const Todo = () => {
 
     const [inputData, setInputData] = useState('');
-    const [items, setItems] = useState([])
+    const [items, setItems] = useState(getLocalItems())
 
     const addItem = () => {
         if (!inputData) { }
@@ -43,12 +56,17 @@ const Todo = () => {
         })
     }
 
+    // To set data in local storage
+    useEffect(() => {
+        localStorage.setItem('lists', JSON.stringify(items))
+    }, [items])
+
     return (
         <>
             <div className='main-div'>
                 <div className="child-div">
                     <figure>
-                    <img src={logo} alt="logo" />
+                        <img src={logo} alt="logo" />
                         <figcaption>
                             Add Your List Here📃
                         </figcaption>
